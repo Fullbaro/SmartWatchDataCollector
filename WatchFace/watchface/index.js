@@ -78,7 +78,7 @@ WatchFace({
     // Always available sensor values
     const loop = timer.createTimer(
       500,
-      5000,
+      300000, // 5 min
       function () {        
 
         // Basic sensors
@@ -89,7 +89,7 @@ WatchFace({
         data.distance.push(distance.current)
         data.stand.push(stand.current)        
         data.city.push(weather.getForecastWeather().cityName)
-        //data.thermometer.push(thermometer.current)      
+        data.thermometer.push(thermometer.current)      
         
         // Sleep
         const date = time.year+"-"+time.month+"-"+time.day
