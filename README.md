@@ -27,7 +27,7 @@ Note that for writing any program for Zepp OS, an excellent documentation is ava
 
 1. It is important that you include the path to your own endpoint in the App code ([here](https://github.com/Fullbaro/SmartWatchDataCollector/blob/main/App/app-side/index.js)).
 2. Also in this file, for the key parameter, enter a unique secret key. You can generate your own [here](https://www.uuidgenerator.net/)
-3. You can specify how often the watch saves sensor data in [this file](https://github.com/Fullbaro/SmartWatchDataCollector/blob/main/WatchFace/watchface/index.js) in the `loop` section.
+3. You can specify how often the watch saves sensor data in [this file](https://github.com/Fullbaro/SmartWatchDataCollector/blob/main/WatchFace/watchface/index.js) in the `loop` section. Some sensors are event based.
 4. You will need to install the Zeus CLI ([docs](https://docs.zepp.com/docs/1.0/guides/tools/cli/))
 5. Enter **App**/**WatchFace** folder, and execute the `zeus preview` command. 
 6. Scan the **QR code** on the terminal with your phone using the option on the developer tab
