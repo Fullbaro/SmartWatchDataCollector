@@ -1,4 +1,6 @@
 # Description of the project
+!! Developed and tested on Amazfit GTR 3 Pro running Zepp OS v1.0!!
+
 There is only one problem with almost all existing smartwatches, and that is that you cannot export your own data for personal use. I own an **Amazfit GTR 3 Pro** watch, which had exactly this problem, so I had to come up with my own solution to retrieve my data from ALL the available sensors. 
 
 **It is important to note that this is not a formal solution, I would call it a workaround. It is very complicated but unfortunately it is the only way to go.** If you're also looking for a solution to this problem, I suggest you check [**THIS**](https://user.huami.com/privacy/index.html#/) link first, you may find the information available here sufficient.
