@@ -7,7 +7,7 @@ async function fetchData(ctx, param) {
     
     // POST method request
     const res = await fetch({
-      url: 'https://www.balintdaniel.com/watch/post.php?',
+      url: 'https://www.exampple.com/post.php?',
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
