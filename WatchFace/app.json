@@ -2,14 +2,14 @@
   "configVersion": "v2",
   "app": {
     "appId": 10013,
-    "appName": "Empty",
+    "appName": "DataCollectorFace",
     "appType": "watchface",
     "version": {
       "code": 1,
       "name": "1.0"
     },
     "vender": "zepp",
-    "description": "Empty watchface",
+    "description": "",
     "icon": "icon.png"
   },
   "permissions": [],
@@ -32,16 +32,8 @@
       },
       "platforms": [
         {
-          "name": "Madrid",
+          "name": "gtr3-pro",
           "deviceSource": 229
-        },
-        {
-          "name": "MadridW",
-          "deviceSource": 230
-        },
-        {
-          "name": "Madrid2",
-          "deviceSource": 6095106
         }
       ],
       "designWidth": 480
@@ -49,7 +41,7 @@
   },
   "i18n": {
     "en-US": {
-      "appName": "Empty"
+      "appName": "DataCollectorFace"
     }
   },
   "defaultLanguage": "en-US",

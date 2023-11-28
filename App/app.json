@@ -2,7 +2,7 @@
   "configVersion": "v2",
   "app": {
     "appId": 27280,
-    "appName": "Fetch API",
+    "appName": "DataCollectorApp",
     "appType": "app",
     "version": {
       "code": 1,
@@ -10,7 +10,7 @@
     },
     "icon": "icon.png",
     "vender": "zepp",
-    "description": "A sample application to demonstrate the fetch API"
+    "description": ""
   },
   "permissions": [],
   "runtime": {
@@ -79,7 +79,7 @@
   },
   "i18n": {
     "en-US": {
-      "appName": "Fetch API"
+      "appName": "DataCollectorApp"
     }
   },
   "defaultLanguage": "en-US"
