@@ -5,7 +5,11 @@ There is only one problem with almost all existing smartwatches, and that is tha
 
 **It is important to note that this is not a formal solution, I would call it a workaround. It is very complicated but unfortunately it is the only way to go.** If you're also looking for a solution to this problem, I suggest you check [**THIS**](https://user.huami.com/privacy/index.html#/) link first, you may find the information available here sufficient.
 
-This code is only targeted at functionality, so for example the clock face is just a basic time display, no design (you can implement your own).
+This project was mainly about functionality, so the watch face is not necessarily the most design-oriented. It is possible to create your own face, or if you want to modify the current one, you can find the assets **[here](https://www.figma.com/file/vRE1wTHGOqUN3NSEEFcj5b/Untitled?type=design&node-id=0:1&mode=design&t=6gdPgM8FrmKmiMb8-1)**
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Fullbaro/SmartWatchDataCollector/main/WatchFace/assets/480x480-amazfit-gtr-3-pro/screenshot.png" width="200" title="screenshot">
+</p>
 
 # How does it work?
 
@@ -36,9 +40,13 @@ Note that for writing any program for Zepp OS, an excellent documentation is ava
 
 	**It is also important to rewrite the value in the php file to the secret key you generated yourself**
 	
-	**I recommend you to create SSL for your web server to be accessible with HTTPS!**
+	**I recommend you to create SSL for your web server to be accessible with HTTPS! Also, disable `data` folder access over the internet!**
 
 ## Final thoughts
+
+**TIPS.:**
+- Set the bottom button to open the Data Collector App to make it easier to send data frequently
+
 With this solution, the limitation of how large a file the watch can read into its memory at the same time may arise. The more times you open the application during the day, the smaller files the program has to work with.
 
 I find it sad that the data collected about my own body can only be extracted in such a complicated and unjustified way. I know that not everyone wants to perform data analysis on themselves, but we should at least be given the opportunity.
