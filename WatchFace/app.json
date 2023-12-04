@@ -2,7 +2,7 @@
   "configVersion": "v2",
   "app": {
     "appId": 10013,
-    "appName": "DataCollectorFace",
+    "appName": "Data Collector Face",
     "appType": "watchface",
     "version": {
       "code": 1,
@@ -32,8 +32,16 @@
       },
       "platforms": [
         {
-          "name": "gtr3-pro",
+          "name": "Madrid",
           "deviceSource": 229
+        },
+        {
+          "name": "MadridW",
+          "deviceSource": 230
+        },
+        {
+          "name": "Madrid2",
+          "deviceSource": 6095106
         }
       ],
       "designWidth": 480
@@ -41,7 +49,7 @@
   },
   "i18n": {
     "en-US": {
-      "appName": "DataCollectorFace"
+      "appName": "Data Collector Face"
     }
   },
   "defaultLanguage": "en-US",

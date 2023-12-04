@@ -1,211 +1,102 @@
-import LocalStorage from '../shared/storage'
-
-path = '../../../../../../../local_storage_data.txt'
-const localStorage = new LocalStorage(path)
-
-// SENSORS
-const time = hmSensor.createSensor(hmSensor.id.TIME)
-const battery = hmSensor.createSensor(hmSensor.id.BATTERY)
-const step = hmSensor.createSensor(hmSensor.id.STEP)
-const calorie = hmSensor.createSensor(hmSensor.id.CALORIE)
-const distance = hmSensor.createSensor(hmSensor.id.DISTANCE)
-const stand = hmSensor.createSensor(hmSensor.id.STAND)
-const weather = hmSensor.createSensor(hmSensor.id.WEATHER)
-const thermometer = hmSensor.createSensor(hmSensor.id.BODY_TEMP) // Simulator can not handle it. Works on watch
-
-const heart = hmSensor.createSensor(hmSensor.id.HEART)
-const spo2 = hmSensor.createSensor(hmSensor.id.SPO2)
-const stress = hmSensor.createSensor(hmSensor.id.STRESS)
-const sleep = hmSensor.createSensor(hmSensor.id.SLEEP)
-const wear = hmSensor.createSensor(hmSensor.id.WEAR)
-
-// Structure of all the sensor data
-data = {
-  time: [],
-  battery: [],
-  step: [],
-  calorie: [],  
-  distance: [],
-  stand: [],
-  city: [],  
-  thermometer: [],
-  sleep: {
-    date: [],
-    start: [],
-    end: [],
-    score: [],
-    wake: [],
-    rem: [],
-    light: [],
-    deep: []
-  },
-  events: {
-    heart: {
-      time: [],
-      value: []
-    },
-    spo2: {
-      time: [],
-      value: []
-    },
-    stress: {
-      time: [],
-      value: []
-    },
-    wear: {
-      time: [],
-      value: []
-    }
-  }
-}
-
 WatchFace({
 
-  onInit() {    
-    // Check if storage file exists
-    const [fs_stat, err] = hmFS.stat(path)
-    if(err !== 0)
-      localStorage.set(data)
-
-    // Read data
-    data = localStorage.get()    
-
-    console.log("Watch face initialization done")
+  onInit() {
+    console.log('index page.js on init invoke')
   },
 
-  build() {  
+  build() {
+    console.log('index page.js on build invoke')
 
-    // Always available sensor values
-    const loop = timer.createTimer(
-      500,
-      300000, // 5 min
-      function () {        
-
-        // Basic sensors
-        data.time.push(time.utc)
-        data.battery.push(battery.current)
-        data.step.push(step.current)
-        data.calorie.push(calorie.current)
-        data.distance.push(distance.current)
-        data.stand.push(stand.current)        
-        data.city.push(weather.getForecastWeather().cityName)
-        data.thermometer.push(thermometer.current)      
-        
-        // Sleep
-        const date = time.year+"-"+time.month+"-"+time.day
-
-        if (data.sleep.date.length === 0 || date !== data.sleep.date[data.sleep.date.length - 1]) {
-
-          const sleepStageArray = sleep.getSleepStageData()
-          const modelData = sleep.getSleepStageModel()
-          const basicInfo = sleep.getBasicInfo()
-
-          wake = 0
-          rem = 0
-          light = 0
-          deep = 0
-          for (i = 0; i < sleepStageArray.length; i++) {
-            const _data = sleepStageArray[i]          
-
-            switch(_data.model){
-              case modelData.WAKE_STAGE:
-                wake += _data.stop - _data.start
-                break
-              case modelData.REM_STAGE:
-                  rem += _data.stop - _data.start
-                  break
-              case modelData.LIGHT_STAGE:
-                  light += _data.stop - _data.start
-                  break
-              case modelData.DEEP_STAGE:
-                  deep += _data.stop - _data.start
-                  break
-              default:
-                break
-            }                
-          }       
-          
-          data.sleep.date.push(date)
-          data.sleep.start.push(basicInfo.startTime)
-          data.sleep.end.push(basicInfo.endTime)
-          data.sleep.score.push(basicInfo.score)
-          data.sleep.wake.push(wake)
-          data.sleep.rem.push(rem)
-          data.sleep.light.push(light)
-          data.sleep.deep.push(deep)
-        }            
-
-
-        // Log full data structure
-        // for (const key in data)
-        //   console.log(key+"---> "+data[key])
-
-        // Log single data
-        console.log("---->("+data.time.length+")"+data.time)
-
-        // Save data
-        localStorage.set(data)
-
-      },{}
-    )
-
-    // Event based sensor values
-    heart.addEventListener(heart.event.CURRENT, function(){      
-      data.events.heart.time.push(time.utc)
-      data.events.heart.value.push(heart.current)    
-    })
-
-    spo2.addEventListener(hmSensor.event.CHANGE, function(){      
-      data.events.spo2.time.push(time.utc)
-      data.events.spo2.value.push(spo2.current)    
-    })
-
-    stress.addEventListener(hmSensor.event.CHANGE, function(){      
-      data.events.stress.time.push(time.utc)
-      data.events.stress.value.push(stress.current)    
-    })
-
-    wear.addEventListener(hmSensor.event.CHANGE, function () {      
-      data.events.wear.time.push(time.utc)
-      data.events.wear.value.push(wear.current)    
-    })
-
-
-    // ---------- ACTUAL WATCH FACE STYLE IMPLEMENTATION ----------
-
-    text_widget = hmUI.createWidget(hmUI.widget.TEXT, {
-      x: 170,
-      y: 200,
-      w: 200,
-      h: 200,
-      text: "TIME",
-      color: "0xFFf30000",
-      text_size: 40,
-      text_style: hmUI.text_style.NONE,
-      align_h: hmUI.align.CENTER,
-      align_v: hmUI.align.CENTER,
+    const bg = hmUI.createWidget(hmUI.widget.IMG, {
+      x: 0,
+      y: 0,
+      src: 'bg.png',
       show_level: hmUI.show_level.ONLY_NORMAL,
     })
 
-    const time_update_loop = timer.createTimer(
-      0,
-      1000,
-      function () {   
+    const comma = hmUI.createWidget(hmUI.widget.IMG, {
+      x: 200,
+      y: 165,
+      src: 'comma.png',
+      show_level: hmUI.show_level.ONLY_NORMAL,
+    })
 
-        text_widget.setProperty(hmUI.prop.MORE, {
-          text: time.hour+":"+time.minute+":"+time.second,
-        })
+    clock_widget = hmUI.createWidget(hmUI.widget.IMG_TIME, {
+      hour_startX: 50,
+      hour_startY: 180,
+      hour_array: ["0_b.png","1_b.png","2_b.png","3_b.png","4_b.png","5_b.png","6_b.png","7_b.png","8_b.png","9_b.png"],
+      hour_zero: 1,
+      hour_space: 0,
+      hour_angle: 0,
+      hour_align: hmUI.align.CENTER,
 
-      },{}
-    )    
+      minute_startX: 265,
+      minute_startY: 180,
+      minute_array: ["0_b.png","1_b.png","2_b.png","3_b.png","4_b.png","5_b.png","6_b.png","7_b.png","8_b.png","9_b.png"],
+      minute_zero: 1,
+      minute_space: 0,
+      minute_angle: 0,
+      minute_follow: 0,      
+      minute_align: hmUI.align.CENTER,
 
-    // ---------- END OF ACTUAL WATCH FACE STYLE IMPLEMENTATION ----------
-    
+      show_level: hmUI.show_level.ONLY_NORMAL,
+    });
 
-    console.log("Watch face build done")
-  },
+    battery_widget = hmUI.createWidget(hmUI.widget.TEXT_IMG, {
+      x: 55,
+      y: 370,
+      w: 180,
+      font_array: ["0_s.png","1_s.png","2_s.png","3_s.png","4_s.png","5_s.png","6_s.png","7_s.png","8_s.png","9_s.png"],        
+      unit_en: 'percent.png',
+      align_h: hmUI.align.CENTER_H,
+      type: hmUI.data_type.BATTERY,
+      show_level: hmUI.show_level.ONLY_NORMAL,
+    });
+
+    date_week_widget = hmUI.createWidget(hmUI.widget.IMG_WEEK, {
+      x: 240,
+      y: 110,
+      w: 123,
+      week_en: ["Mon.png","Tue.png","Wed.png","Thu.png","Fri.png","Sat.png", "Sun.png"],      
+      show_level: hmUI.show_level.ONLY_NORMAL,
+    });
+
+    date_day_widget =  hmUI.createWidget(hmUI.widget.IMG_DATE, {
+      day_startX: 370,
+      day_startY: 110,            
+      day_en_array: ["0_s.png","1_s.png","2_s.png","3_s.png","4_s.png","5_s.png","6_s.png","7_s.png","8_s.png","9_s.png"],
+      day_zero: 1,            
+      day_align: hmUI.align.LEFT,      
+      show_level: hmUI.show_level.ONLY_NORMAL,
+    });
+  
+    temperature_current_widget = hmUI.createWidget(hmUI.widget.TEXT_IMG, {
+      x: 55,
+      y: 110,
+      w: 180,
+      font_array: ["0_s.png","1_s.png","2_s.png","3_s.png","4_s.png","5_s.png","6_s.png","7_s.png","8_s.png","9_s.png"],      
+      unit_en: 'celsius.png',
+      negative_image: 'minus.png',
+      align_h: hmUI.align.CENTER_H,
+      type: hmUI.data_type.WEATHER_CURRENT,
+      show_level: hmUI.show_level.ONLY_NORMAL,
+    });
+
+    step_current_widget = hmUI.createWidget(hmUI.widget.TEXT_IMG, {
+      x: 255,
+      y: 370,
+      w: 180,
+      font_array: ["0_s.png","1_s.png","2_s.png","3_s.png","4_s.png","5_s.png","6_s.png","7_s.png","8_s.png","9_s.png"],
+      padding: false,
+      h_space: 0,
+      align_h: hmUI.align.CENTER_H,
+      type: hmUI.data_type.STEP,
+      show_level: hmUI.show_level.ONLY_NORMAL,
+    });
+
+  }, 
 
   onDestroy() {
-    console.log("Watch face destroyed")
+    console.log('index page.js on destroy invoke')
   },
 })

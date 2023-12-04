@@ -2,7 +2,7 @@
   "configVersion": "v2",
   "app": {
     "appId": 27280,
-    "appName": "DataCollectorApp",
+    "appName": "Data Collector",
     "appType": "app",
     "version": {
       "code": 1,
@@ -79,7 +79,7 @@
   },
   "i18n": {
     "en-US": {
-      "appName": "DataCollectorApp"
+      "appName": "Data Collector"
     }
   },
   "defaultLanguage": "en-US"

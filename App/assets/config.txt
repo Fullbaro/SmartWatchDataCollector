@@ -1,4 +1,0 @@
-{
-    "endpoint": "https://www.balintdaniel.com/watch/post.php?",
-    "key": "asd"
-}
