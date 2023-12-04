@@ -44,8 +44,7 @@ Note that for writing any program for Zepp OS, an excellent documentation is ava
 
 ## Final thoughts
 
-**TIPS.:**
-- Set the bottom button to open the Data Collector App to make it easier to send data frequently
+**TIP:** Set the bottom button to open the Data Collector App to make it easier to send data frequently
 
 With this solution, the limitation of how large a file the watch can read into its memory at the same time may arise. The more times you open the application during the day, the smaller files the program has to work with.
 
