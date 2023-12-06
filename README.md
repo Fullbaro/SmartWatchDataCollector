@@ -1,3 +1,4 @@
+
 # Description of the project
 !! Developed and tested on Amazfit GTR 3 Pro running Zepp OS v1.0!!
 
@@ -30,7 +31,7 @@ The Amazfit watches run on **Zepp OS**, on which it is possible to write apps an
 
 Note that for writing any program for Zepp OS, an excellent documentation is available at the following link: [https://docs.zepp.com/docs/1.0/intro/](https://docs.zepp.com/docs/1.0/intro/)
 
-1. It is important that you include the path to your own endpoint in the App code ([here](https://github.com/Fullbaro/SmartWatchDataCollector/blob/main/App/app-side/index.js)).
+1. It is important that you include the path to your own endpoint in the App code ([here](https://github.com/Fullbaro/SmartWatchDataCollector/blob/main/App/utils/config/constants.js)).
 2. Also in this file, for the key parameter, enter a unique secret key. You can generate your own [here](https://www.uuidgenerator.net/)
 3. You can specify how often the watch saves sensor data in [this file](https://github.com/Fullbaro/SmartWatchDataCollector/blob/main/WatchFace/app.js) by changing the `interval`(ms) variable. Some sensors are event based.
 4. You will need to install the Zeus CLI ([docs](https://docs.zepp.com/docs/1.0/guides/tools/cli/))
