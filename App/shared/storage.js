@@ -7,8 +7,8 @@ function str2ab(str) {
     return buf
 }
 
-export default class LocalStorage {
-    constructor (fileName = '') {
+export default class LocalStorage {    
+    constructor (fileName = '') {        
         this.fileName = fileName
         this.contentObj = {}
     }

@@ -2,7 +2,7 @@
     $json_data = file_get_contents('php://input');
     $data = json_decode($json_data, true);
 
-    if ($data["key"] != "52f13ff0-8dd1-11ee-b9d1-0242ac120003"){
+    if ($data["key"] != "52f13ff0-8dd1-11ee-b9d1-0242ac120002"){
         http_response_code(400);
         echo json_encode(["error" => "No access"]);
     } else {

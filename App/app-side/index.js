@@ -1,4 +1,5 @@
-import { MessageBuilder } from "../shared/message";
+import { MessageBuilder } from "../shared/message"
+import { ENDPOINT, KEY } from '../utils/config/constants'
 
 const messageBuilder = new MessageBuilder();
 
@@ -6,14 +7,14 @@ async function fetchData(ctx, param) {
   try {    
 
     const res = await fetch({
-      url: 'https://example.com',
+      url: ENDPOINT,
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({        
         data: param,
-        key: "52f13ff0-8dd1-11ee-b9d1-0242ac120003"
+        key: KEY
       })
     })
 
