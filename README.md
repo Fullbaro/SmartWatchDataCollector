@@ -57,7 +57,5 @@ Note that for writing any program for Zepp OS, an excellent documentation is ava
 
 **TIP:** Set the bottom button to open the Data Collector App to make it easier to send data frequently
 
-With this solution, the limitation of how large a file the watch can read into its memory at the same time may arise. The more times you open the application during the day, the smaller files the program has to work with.
-
 I find it sad that the data collected about my own body can only be extracted in such a complicated and unjustified way. I know that not everyone wants to perform data analysis on themselves, but we should at least be given the opportunity.
 If you are so determined to go through all these steps and have any questions, feel free to contact me
