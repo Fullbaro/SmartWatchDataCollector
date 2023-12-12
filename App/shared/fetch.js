@@ -1,78 +1,91 @@
-import { CHUNK_SIZE } from '../utils/config/constants'
+import { CHUNK_SIZE } from '../utils/config/constants';
 
-function getChunk(obj, from, to) {
-    let tmp = { ...obj };
+export function fetchAndSendChunks(storages, messageBuilder, log) {
+    const storageKeys = Object.keys(storages);
+    const totalLines = Object.values(storages).reduce((sum, storage) => sum + storage.length(), 0);
+    let processedLines = 0;
 
-    for (const key in obj) {
-        if (Array.isArray(obj[key])) {
-            tmp[key] = tmp[key].slice(from, to);
-        } else if (typeof tmp[key] === 'object' && tmp[key] !== null) {
-            getChunk(tmp[key], from, to);
+    function processStorage(index) {
+        if (index < storageKeys.length) {
+            const storageKey = storageKeys[index];
+            const storage = storages[storageKey];
+            fetchAndSendChunksRecursive(storage, 0, storageKey, messageBuilder, log, totalLines);
         }
     }
 
-    return tmp;
-}
+    function updateProgress(lines, storage) {
+        processedLines += lines;
+        const progress = Math.floor((processedLines / totalLines) * 100);
+        log.setProperty(hmUI.prop.MORE, {
+            text: `${progress}%`,
+        });
 
-function getMaxLength(obj) {
-    let maxLength = 0;    
-
-    const stack = [{ obj, depth: 0 }];
-
-    while (stack.length > 0) {
-        const { obj, depth } = stack.pop();
-    
-        for (const key in obj) {      
-            if (Array.isArray(obj[key])) {              
-                if (obj[key].length > maxLength) {
-                    maxLength = obj[key].length;                    
-                }
-            } else if (typeof obj[key] === 'object' && obj[key] !== null) {        
-                stack.push({ obj: obj[key], depth: depth + 1 });
-            }
-        }
-    }
-
-    return maxLength;
-}
-
-export function fetcher(data_template, messageBuilder, text_widget, localStorage, param, i){    
-    const max = Math.ceil(getMaxLength(data) / CHUNK_SIZE)    
-    if(max > 0) {
-
-        console.log("SENDING...("+(i+1)+"/"+max+")")
-        text_widget.setProperty(hmUI.prop.MORE, {
-            text: "SENDING...("+(i+1)+"/"+max+")",
-        })
-    
-        messageBuilder
-            .request({      
-                data: getChunk(param, (i*CHUNK_SIZE), ((i*CHUNK_SIZE)+ CHUNK_SIZE))
-            })
-            .then((data) => {
-                console.log("receive data");
-                const { result = {} } = data;
-                //const text = JSON.stringify(result);      
-        
-                if(result === "OK"){
-                    if(i < max-1){
-                        fetcher(data_template, messageBuilder, text_widget, localStorage, param, i+1)
-                    }else{
-                        // Clear storage
-                        //! localStorage.set(data_template)          
-            
-                        text_widget.setProperty(hmUI.prop.MORE, {
-                            text: "DONE",
-                        })  
-                    }
-                }else{
-                    text_widget.setProperty(hmUI.prop.MORE, {
-                        text: "ERROR",
-                    })
-                }
+        if (processedLines >= totalLines) {
+            log.setProperty(hmUI.prop.MORE, {
+                text: "DONE",
             });
-    } else
-        text_widget.setProperty(hmUI.prop.MORE, {
-            text: "Nothing to send",
-        })
+
+            // Clear storage
+            storage.set("")
+
+            hmUI.scrollToPage(1, false)
+        }
+    }
+
+    processStorage(0);
+
+    function fetchAndSendChunksRecursive(storage, startLine, storageKey, messageBuilder, log, totalLines) {
+        const endLine = startLine + CHUNK_SIZE;
+        const content = storage.get(startLine, endLine);
+        console.log("SENDING", storageKey)
+
+        if (content !== "") {
+            messageBuilder
+                .request({
+                    data: content,
+                    type: storageKey,
+                })
+                .then((data) => {                    
+                    const { result = {} } = data;
+                    const text = JSON.stringify(result); 
+                    console.log("Response received", text);
+    
+                    if (result === "OK") {
+                        updateProgress(CHUNK_SIZE, storage);
+    
+                        if (startLine + CHUNK_SIZE <= totalLines) {                            
+                            fetchAndSendChunksRecursive(storage, endLine, storageKey, messageBuilder, log, totalLines);
+                        } else {                            
+                            checkAllStoragesProcessed();
+                        }
+                    } else {
+                        log.setProperty(hmUI.prop.MORE, {
+                            text: text,
+                        });
+                        console.log("ERROR", text);
+                    }
+                });
+        } else {            
+            checkAllStoragesProcessed();
+        }
+    }
+    
+    function checkAllStoragesProcessed() {
+        const currentIndex = storageKeys.indexOf(currentStorageKey);
+        if (currentIndex !== -1 && currentIndex < storageKeys.length - 1) {
+            // Van még hátra storage, folytassuk a következővel
+            processStorage(currentIndex + 1);
+        } else {
+            // Minden storage feldolgozásra került
+            console.log("Minden storage feldolgozásra került");            
+        }
+    }
+    
+    function processStorage(index) {
+        if (index < storageKeys.length) {
+            currentStorageKey = storageKeys[index];
+            const storage = storages[currentStorageKey];
+            fetchAndSendChunksRecursive(storage, 0, currentStorageKey, messageBuilder, log, totalLines);
+        }
+    }
 }

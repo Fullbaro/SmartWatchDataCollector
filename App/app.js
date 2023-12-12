@@ -1,52 +1,20 @@
 import "./shared/device-polyfill";
 import { MessageBuilder } from "./shared/message";
 import LocalStorage from './shared/storage'
+import { STORAGES } from './utils/config/constants'
 
 App({
   globalData: {
     messageBuilder: null,
-    localStorage: new LocalStorage("../../../../../../../local_storage_data.txt"),
-    data_template: {
-      time: [],
-      battery: [],
-      step: [],
-      calorie: [],  
-      distance: [],
-      stand: [],
-      city: [],  
-      thermometer: [],
-      sleep: {
-        date: [],
-        start: [],
-        end: [],
-        score: [],
-        wake: [],
-        rem: [],
-        light: [],
-        deep: []
-      },
-      events: {
-        heart: {
-          time: [],
-          value: []
-        },
-        spo2: {
-          time: [],
-          value: []
-        },
-        stress: {
-          time: [],
-          value: []
-        },
-        wear: {
-          time: [],
-          value: []
-        }
-      }
-    }
+    storages: {}
   },
   onCreate(options) {
     console.log("app on create invoke");
+
+    // Setup sensor data storage files
+    for(const element of STORAGES)
+      this.globalData.storages[element] = new LocalStorage("../../../../../../../"+element+"_storage.txt")
+
     let appId;
     if (!hmApp.packageInfo) {      
       throw new Error('Set appId,  appId needs to be the same as the configuration in app.json');

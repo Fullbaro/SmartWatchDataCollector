@@ -13,7 +13,8 @@ async function fetchData(ctx, param) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({        
-        data: param,
+        data: param.data,
+        type: param.type,
         key: KEY
       })
     })
@@ -24,9 +25,9 @@ async function fetchData(ctx, param) {
       data: { result: resBody },
     })
 
-  } catch (error) {
+  } catch (error) {        
     ctx.response({
-      data: { result: "ERROR" },
+      data: { result: "ERROR-"+error.message },
     });
   }
 };
@@ -37,7 +38,7 @@ AppSideService({
 
     messageBuilder.on("request", (ctx) => {
       const jsonRpc = messageBuilder.buf2Json(ctx.request.payload);      
-      return fetchData(ctx, jsonRpc.data);
+      return fetchData(ctx, jsonRpc);
     });
   },
 

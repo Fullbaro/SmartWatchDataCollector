@@ -1,7 +1,5 @@
 import LocalStorage from "./shared/storage"
-
-path = "../../../../../../local_storage_data.txt"
-const localStorage = new LocalStorage(path)
+import { INTERVAL, STORAGES } from './utils/config/constants'
 
 // SENSORS
 const time = hmSensor.createSensor(hmSensor.id.TIME)
@@ -19,82 +17,46 @@ const stress = hmSensor.createSensor(hmSensor.id.STRESS)
 const sleep = hmSensor.createSensor(hmSensor.id.SLEEP)
 const wear = hmSensor.createSensor(hmSensor.id.WEAR)
 
-// Structure of all the sensor data
-data = {
-  time: [],
-  battery: [],
-  step: [],
-  calorie: [],  
-  distance: [],
-  stand: [],
-  city: [],  
-  thermometer: [],
-  sleep: {
-    date: [],
-    start: [],
-    end: [],
-    score: [],
-    wake: [],
-    rem: [],
-    light: [],
-    deep: []
-  },
-  events: {
-    heart: {
-      time: [],
-      value: []
-    },
-    spo2: {
-      time: [],
-      value: []
-    },
-    stress: {
-      time: [],
-      value: []
-    },
-    wear: {
-      time: [],
-      value: []
-    }
-  }
-}
-
-const interval = 300_000
-
 App({
-  globalData: {},
+  globalData: {
+    storages: {}
+  },
   onCreate(options) {
     console.log('Watch face app starting')
 
-    // Check if storage file exists
-    const [fs_stat, err] = hmFS.stat(path)
-    if(err !== 0)
-      localStorage.set(data)
+    // Setup sensor data storage files
+    for(const element of STORAGES)
+      this.globalData.storages[element] = new LocalStorage("../../../../../../../"+element+"_storage.txt")
 
-    // Read data
-    data = localStorage.get()    
+    // !TEMP! Clear files
+    // for (const element of STORAGES)
+    //   this.globalData.storages[element].set("")
 
     // Always available sensor values    
     const loop = timer.createTimer(
       500,
-      interval,
-      function () {            
+      INTERVAL,
+      function (options) {            
 
-        if (data.time.length === 0 || (time.utc - (interval - 20_000) ) > data.time[data.time.length - 1]) {
+        let length = options.self.globalData.storages.basic.length() 
+        let lastElement = options.self.globalData.storages.basic.get(length-1, length)        
+        
+        if (length === 0 || (time.utc - (INTERVAL - 20_000) ) > lastElement.split(';')[0]) {
+
           // Basic sensors
-          data.time.push(time.utc)
-          data.battery.push(battery.current)
-          data.step.push(step.current)
-          data.calorie.push(calorie.current)
-          data.distance.push(distance.current)
-          data.stand.push(stand.current)        
-          data.city.push(weather.getForecastWeather().cityName)
-          data.thermometer.push(thermometer.current)      
+          const weatherData = weather.getForecastWeather()
+          const { forecastData, tideData } = weatherData
+
+          options.self.globalData.storages.basic.append(
+            `${time.utc};${battery.current};${step.current};${calorie.current};${distance.current};${stand.current};${weatherData.cityName};${thermometer.current};${forecastData.data[0].index};${forecastData.data[0].low};${forecastData.data[0].high}`
+          );
           
           // Sleep
           const date = time.year+"-"+time.month+"-"+time.day
-
-          if (data.sleep.date.length === 0 || date !== data.sleep.date[data.sleep.date.length - 1]) {
+          let length = options.self.globalData.storages.sleep.length() 
+          let lastElement = options.self.globalData.storages.sleep.get(length-1, length)
+          
+          if (length === 0 || date !== lastElement.split(';')[0]) {
 
             const sleepStageArray = sleep.getSleepStageData()
             const modelData = sleep.getSleepStageModel()
@@ -124,53 +86,42 @@ App({
                   break
               }                
             }       
+
+            options.self.globalData.storages.sleep.append(
+              `${date};${basicInfo.startTime};${basicInfo.endTime};${basicInfo.score};${wake};${rem};${light};${deep}`
+            );
             
-            data.sleep.date.push(date)
-            data.sleep.start.push(basicInfo.startTime)
-            data.sleep.end.push(basicInfo.endTime)
-            data.sleep.score.push(basicInfo.score)
-            data.sleep.wake.push(wake)
-            data.sleep.rem.push(rem)
-            data.sleep.light.push(light)
-            data.sleep.deep.push(deep)
-          }            
-
-
-          // Log full data structure
-          // for (const key in data)
-          //   console.log(key+"---> "+data[key])
-
-          // Log single data
-          //console.log("---->("+data.time.length+")"+data.time)
-
-          // Save data
-          localStorage.set(data)
+          }
                     
           console.log("DATA SAVED")
         } else
           console.log("Not enough time passed")
-      },{}      
+      },{self: this}      
     )
 
     // Event based sensor values
-    heart.addEventListener(heart.event.CURRENT, function(){      
-      data.events.heart.time.push(time.utc)
-      data.events.heart.value.push(heart.current)    
+    heart.addEventListener(heart.event.CURRENT, () => {            
+      this.globalData.storages.heart.append(
+          `${time.utc};${heart.current}`
+      );
+    });
+
+    spo2.addEventListener(hmSensor.event.CHANGE, () => {      
+      this.globalData.storages.spo2.append(
+        `${time.utc};${spo2.current}`
+      );
     })
 
-    spo2.addEventListener(hmSensor.event.CHANGE, function(){      
-      data.events.spo2.time.push(time.utc)
-      data.events.spo2.value.push(spo2.current)    
+    stress.addEventListener(hmSensor.event.CHANGE, () => {      
+      this.globalData.storages.stress.append(
+        `${time.utc};${stress.current}`
+      );  
     })
 
-    stress.addEventListener(hmSensor.event.CHANGE, function(){      
-      data.events.stress.time.push(time.utc)
-      data.events.stress.value.push(stress.current)    
-    })
-
-    wear.addEventListener(hmSensor.event.CHANGE, function () {      
-      data.events.wear.time.push(time.utc)
-      data.events.wear.value.push(wear.current)    
+    wear.addEventListener(hmSensor.event.CHANGE, () => {      
+      this.globalData.storages.wear.append(
+        `${time.utc};${wear.current}`
+      );
     })
 
   },
