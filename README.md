@@ -12,6 +12,16 @@ This project was mainly about functionality, so the watch face is not necessaril
   <img src="https://raw.githubusercontent.com/Fullbaro/SmartWatchDataCollector/main/WatchFace/assets/480x480-amazfit-gtr-3-pro/screenshot.png" width="200" title="screenshot">
 </p>
 
+The app for sending data to the server has been complemented by a scrollable interface with buttons arranged in a number of catetogies. These buttons, such as food and drink, are used to manually enter data that the watch cannot keep track of by default.
+
+<p align="center">
+	<img src="https://raw.githubusercontent.com/Fullbaro/SmartWatchDataCollector/main/App/assets/common/screenshot_1.png" width="200" title="screenshot">
+	<img src="https://raw.githubusercontent.com/Fullbaro/SmartWatchDataCollector/main/App/assets/common/screenshot_2.png" width="200" title="screenshot">
+	<img src="https://raw.githubusercontent.com/Fullbaro/SmartWatchDataCollector/main/App/assets/common/screenshot_3.png" width="200" title="screenshot">
+	<img src="https://raw.githubusercontent.com/Fullbaro/SmartWatchDataCollector/main/App/assets/common/screenshot_4.png" width="200" title="screenshot">
+	<img src="https://raw.githubusercontent.com/Fullbaro/SmartWatchDataCollector/main/App/assets/common/screenshot_5.png" width="200" title="screenshot">
+</p>
+
 # How does it work?
 
 The Amazfit watches run on **Zepp OS**, on which it is possible to write apps and watch faces. In my case, I am running the **V1.0** version of Zepp OS, which is much more limited than the newer ones, making the process even more complicated.
@@ -33,7 +43,7 @@ Note that for writing any program for Zepp OS, an excellent documentation is ava
 
 1. It is important that you include the path to your own endpoint in the App code ([here](https://github.com/Fullbaro/SmartWatchDataCollector/blob/main/App/utils/config/constants.js)).
 2. Also in this file, for the key parameter, enter a unique secret key. You can generate your own [here](https://www.uuidgenerator.net/)
-3. You can specify how often the watch saves sensor data in [this file](https://github.com/Fullbaro/SmartWatchDataCollector/blob/main/WatchFace/app.js) by changing the `interval`(ms) variable. Some sensors are event based.
+3. You can specify how often the watch saves sensor data in [this file](https://github.com/Fullbaro/SmartWatchDataCollector/blob/main/WatchFace/utils/config/constants.js) by changing the `INTERVAL`(ms) variable. Some sensors are event based.
 4. You will need to install the Zeus CLI ([docs](https://docs.zepp.com/docs/1.0/guides/tools/cli/))
 5. Enter **App**/**WatchFace** folder, and execute the `zeus preview` command. 
 6. Scan the **QR code** on the terminal with your phone using the option on the developer tab
